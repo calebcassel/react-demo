@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Building UI With React</title>
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700,900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/bootstrap.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+    <script src="lib/react-0.4.0.js"></script>
+    <script src="lib/JSXTransformer-0.4.0.js"></script>
+
+    <script src="lib/jquery-1.8.3.min.js"></script>
+    <script src="lib/underscore-min.js"></script>
+    <script src="lib/backbone-min.js"></script>
+    <script src="lib/react.backbone.js"></script>
+    <style type="text/css">
+        .dog {
+            display: inline-block;
+            margin-left: 4px;
+        }
+        .treats {
+           height: 32px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="page-header"><h2>I am hungry!</h2></div>
+    <div id="doggy-app" class="text-center"></div>
+</div>
+
+<script type="text/jsx" id="code">
+/**
+ * @jsx React.DOM
+ */
+(function() {
+    var TreatsModel = Backbone.Collection.extend({
+        // TODO: Add url for fetching from server
+    });
+
+    var treatsModel = new TreatsModel([
+        { type: 'bone'  },
+        { type: 'bacon' },
+        { type: 'steak' }
+    ]);
+
+    var Treat = React.createBackboneClass({
+    	componentDidMount: function() {
+    	    $(this.getDOMNode()).hide().fadeIn(50);
+    	},
+
+        render: function() {
+            var src = 'img/icon_' + this.props.model.get('type') + '.png';
+            return (
+                <li>
+                    <img src={src}/>
+                </li>
+            );
+        }
+    });
+
+    var Treats = React.createBackboneClass({
+        render: function() {
+            var treats = this.props.model.map(function (treat) {
+                return <Treat model={treat} />;
+            });
+
+            return (
+              <ul className="inline treats">
+                {treats}
+              </ul>
+            );
+        }
+    });
+
+    var Dog = React.createBackboneClass({
+        getInitialState: function() {
+            return {
+                moodRating: 0,
+                mood: this.getMood(0)
+            };
+        },
+
+        getMood: function(moodRating) {
+            if(moodRating > 5) {
+                return 'happy';
+            } else if(moodRating > 0) {
+                return 'excited';
+            } else {
+                return 'sad';
+            }
+        },
+
+        updateMood: function(treat) {
+            var moodRating = this.state.moodRating;
+            
+            if(!treat) {
+                moodRating -=2;
+                if(moodRating < 0) moodRating = 0;
+            } else {
+                var treatType = treat.get('type');
+
+                if(treatType == 'steak') {
+                    moodRating += 3;
+                } else if(treatType == 'bacon') {
+                    moodRating += 2;
+                } else {
+                    moodRating++;
+                }
+                
+                if(moodRating > 10) moodRating = 10;
+            }
+
+            this.setState({
+                moodRating: moodRating,
+                mood: this.getMood(moodRating)
+            });
+        },
+
+        eatTreat: function() {
+            var treat = this.props.model.pop();
+            this.updateMood(treat);
+        },
+
+        componentDidMount: function() {
+            var timer = Math.random() * 1500 + 1500;
+            setInterval(this.eatTreat.bind(this), timer);
+        },
+
+        render: function() {
+            var src = 'img/dog_' + this.state.mood + '.jpg';
+            return (
+                <div className="dog"><img src={src}/></div>
+            ); 
+        }
+    });
+
+    var DogFooder = React.createBackboneClass({
+        giveTreat: function() {
+            var type;
+            var rand = Math.random();
+            if(rand > 0.85) {
+                type = 'steak';
+            } else if(rand > 0.6) {
+                type = 'bacon';
+            } else {
+                type = 'bone';
+            }
+
+            this.props.model.add({ type: type });
+        },
+
+        takeTreat: function() {
+            if(this.props.model.length == 0) return;
+            this.props.model.pop();
+        },
+
+        render: function() {
+            var model = this.props.model;
+            var addButtonState = model.length > 0 ? '' : ' disabled';
+
+            return (
+                <div>
+                    <Dog model={model} />
+                    <Dog model={model} />
+                    <h3>Treats: {model.length}</h3>
+                    <Treats model={model}/>
+                    <br/>
+                    <div>
+                        <button className="btn btn-large btn-success" onClick={this.giveTreat}>Good dog!</button>
+                        {'  '}
+                        <button className={'btn btn-large btn-danger ' + addButtonState} onClick={this.takeTreat}>Bad dog!</button>
+                    </div>
+                </div>
+            );
+        }
+    });
+
+    React.renderComponent(<DogFooder model={treatsModel}/>, document.getElementById('doggy-app'));
+})();
+</script>
+
+<script>var currentPage = 8;</script>
+<script src="lib/jquery.syntaxhighlighter.min.js"></script>
+<script src="lib/base.js"></script>
+</body>
+</html>

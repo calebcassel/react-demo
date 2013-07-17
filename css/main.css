@@ -1,0 +1,33 @@
+h1, h2, h3, h4, h5 {
+	font-family: 'Source Sans Pro', sans-serif;
+}
+
+.nav {
+	text-align: center;
+}
+.nav > li {
+	display: inline-block;
+	float: none;
+}
+
+.hero-unit h1 {
+	color: #f60;
+}
+
+.page-header {
+	color: #f60;
+	margin-bottom: 5em;
+	padding: 0;
+}
+
+.show-source {
+	margin-top: 2em;
+}
+
+ul.bullets {
+	font-size: xx-large;
+}
+
+ul.bullets > li {
+	margin-bottom: 1em;
+}

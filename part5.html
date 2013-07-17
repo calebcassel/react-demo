@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+	<title>Building UI With React</title>
+	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700,900' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/bootstrap.css"/>
+	<link rel="stylesheet" href="css/main.css"/>
+	<script src="lib/react-0.4.0.js"></script>
+	<script src="lib/JSXTransformer-0.4.0.js"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+	<div class="page-header"><h2>States and Events</h2></div>
+	<div id="doggy-app" class="text-center"></div>
+</div>
+
+<script type="text/jsx" id="code">
+/**
+ * @jsx React.DOM
+ */
+(function() {
+	var DogFooder = React.createClass({
+		getInitialState: function() {
+			return {
+				treats: 0
+			}
+		},
+
+		giveTreat: function() {
+			this.setState({
+				treats: this.state.treats + 1
+			});
+		},
+
+		takeTreat: function() {
+			var treats = this.state.treats;
+			if(treats == 0) return;
+
+			this.setState({
+				treats: treats - 1
+			});
+		},
+
+		render: function() {
+			var addButtonState = this.state.treats > 0 ? '' : ' disabled';
+
+			return (
+				<div>
+					<h3>Treats: {this.state.treats}</h3>
+					<br/>
+					<div>
+						<button className="btn btn-large btn-success" onClick={this.giveTreat}>Good dog!</button>
+						{'  '}
+						<button className={'btn btn-large btn-danger ' + addButtonState} onClick={this.takeTreat}>Bad dog!</button>
+					</div>
+				</div>
+			);
+		}
+	});
+
+	React.renderComponent(<DogFooder />, document.getElementById('doggy-app'));
+})();
+</script>
+
+<script>var currentPage = 5;</script>
+<script src="lib/jquery-1.8.3.min.js"></script>
+<script src="lib/jquery.syntaxhighlighter.min.js"></script>
+<script src="lib/base.js"></script>
+</body>
+</html>

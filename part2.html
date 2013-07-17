@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Building UI With React</title>
+	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700,900' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/bootstrap.css"/>
+	<link rel="stylesheet" href="css/main.css"/>
+</head>
+<body>
+
+<div class="container-fluid">
+	<div class="page-header"><h1>React</h1></div>
+
+	<ul class="bullets">
+		<li>Developed internally at Facebook</li>
+		<li>Components <=> Views</li>
+		<li>Representation of the DOM</li>
+		<li>Reconciliation (<a href="javascript:void(0)" onclick="example()">example</a>)</li>
+	</ul>
+
+	<img src="img/khaaaaaaaan.gif" style="display:none" id="khan"/>
+</div>
+
+<script>
+	var currentPage = 2;
+	function example() {
+		$('#khan').show();
+	}
+</script>
+<script src="lib/jquery-1.8.3.min.js"></script>
+<script src="lib/base.js"></script>
+</body>
+</html>
